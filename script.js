@@ -30,73 +30,75 @@ function prepareElementData(dataObject) {
     return elementDataArray;
 }
 
-function addEmptyElement(elementData) {
+function addEmptyElement(element) {
     const periodicTable = document.querySelector('.periodic-table');
-    const element = document.createElement('div');
-    element.classList.add('empty-element');
-    element.dataset.atomicNumber = elementData.number;
-    element.innerHTML = `
-                         <div class="atomic-number">${elementData.number}</div>
+    const emptyElementBox = document.createElement('div');
+    emptyElementBox.classList.add('empty-element');
+    emptyElementBox.dataset.atomicNumber = element.number;
+    emptyElementBox.innerHTML = `
+                         <div class="atomic-number">${element.number}</div>
                         `;
-    periodicTable.appendChild(element);
+    periodicTable.appendChild(emptyElementBox);
     
-    document.querySelector(".empty-element").addEventListener("click", clickElement);
-    console.log("clicked")
+    emptyElementBox.addEventListener("click", clickElement);
+    
 
     function clickElement(){
-        showFormView(elementData);
+        console.log("clicked")
+        showFormView(element);
     }
 }
 
 
-function showFormView(elementData) {
+function showFormView(element) {
     const dialog = document.querySelector("dialog");
-    console.log(elementData)
+    dialog.innerHTML = "";
+    console.log(element)
 
-    if (!dialog.open) {
-        dialog.showModal(elementData);
-        const existingInputs = dialog.querySelectorAll("input");
-    if (existingInputs.length === 0) {
-
+    dialog.showModal(element);
   
-    const inputName = document.createElement("input");
-    inputName.type = "text";
-    inputName.id = "element-name";
-    inputName.placeholder = "Enter the element name";
-
-    const divElementNumber = document.createElement("div");
-    divElementNumber.classList.add("element-number");
-    divElementNumber.textContent = elementData.number;
-  
-    const inputSymbol = document.createElement("input");
-    inputSymbol.type = "text";
-    inputSymbol.id = "element-symbol";
-    inputSymbol.placeholder = "Enter the element symbol";
-  
-    const divElementMass = document.createElement("div");
-    divElementMass.classList.add("element-mass");
-    divElementMass.textContent = elementData.atomic_mass;
-  
-    const buttonAddElement = document.createElement("button");
-    buttonAddElement.id = "btn-add-element";
-    buttonAddElement.textContent = "⍻";
-  
+    const inputName = createInputElement("text", "element-name", "Enter the element name");
+    const divElementNumber = createDivElement("element-number", element.number);
+    const inputSymbol = createInputElement("text", "element-symbol", "Enter the element symbol");
+    const divElementMass = createDivElement("element-mass", element.atomic_mass);
+    const buttonAddElement = createButtonElement("btn-add-element", "⍻");
+    
     dialog.appendChild(inputName);
     dialog.appendChild(divElementNumber);
     dialog.appendChild(inputSymbol);
     dialog.appendChild(divElementMass);
     dialog.appendChild(buttonAddElement);
-
-    closeDialog();
+    
+    function createInputElement(type, id, placeholder) {
+        const input = document.createElement("input");
+        input.type = type;
+        input.id = id;
+        input.placeholder = placeholder;
+        return input;
     }
+    
+    function createDivElement(className, textContent) {
+        const div = document.createElement("div");
+        div.classList.add(className);
+        div.textContent = textContent;
+        return div;
+    }
+    
+    function createButtonElement(id, textContent) {
+        const button = document.createElement("button");
+        button.id = id;
+        button.textContent = textContent;
+        return button;
+    }
+        
+    closeDialog();
 }
   
-  function closeDialog(){
+function closeDialog(){
     const dialog = document.querySelector("dialog");
+
     dialog.addEventListener("click", (event) => {
       if (event.target === dialog) {
         dialog.close();
-      }
-    });
-}
+    }});
 }
