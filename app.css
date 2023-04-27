@@ -48,4 +48,133 @@ body {
   font-weight: bold;
 }
 
-  
+  .sidebar {
+  position: fixed;
+  top: 0;
+  left: -200px;
+  width: 200px;
+  height: 100%;
+  background-color: #eee;
+  transition: left 0.3s ease-in-out;
+}
+
+.sidebar.show {
+  left: 0;
+}
+
+.toggle-button {
+  position: fixed;
+  top: 50%;
+  left: 0;
+  width: 20px;
+  height: 40px;
+  background-color: #eee;
+  border: none;
+  transform: translateY(-50%);
+  padding: 0;
+  z-index: 1;
+}
+
+.arrow {
+  display: block;
+  width: 10px;
+  height: 10px;
+  border-top: 2px solid #333;
+  border-right: 2px solid #333;
+  transform: rotate(-45deg);
+  margin: auto;
+}
+
+.arrow.up {
+  transform: rotate(135deg);
+}
+body {
+  font-family: sans-serif;
+  color: #2f3191;
+}
+
+:root {
+    --gap: 5px;
+    --element-size: 6vw;
+    --color: #2f3191;
+    --blue: #2f3191;
+    --white: #fff;
+    --font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  }
+
+.periodic-table {
+  display: grid;
+  grid-template-columns: repeat(18, 1fr);
+  grid-template-rows: repeat(9, 1fr);
+  grid-gap: 1px;
+  padding: 20px;
+}
+
+.empty-element {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--white);
+  border: 3px solid var(--blue);
+  font-size: 14px;
+  font-weight: bold;
+  text-align: center;
+}
+
+.element .name {
+  font-size: 10px;
+  font-weight: normal;
+  margin-bottom: 5px;
+}
+
+.element .atomic-number {
+  font-size: 12px;
+  margin-bottom: 5px;
+}
+
+.element .symbol {
+  font-size: 30px;
+  font-weight: bold;
+}
+
+  .sidebar {
+  position: fixed;
+  top: 0;
+  left: -200px;
+  width: 200px;
+  height: 100%;
+  background-color: #eee;
+  transition: left 0.3s ease-in-out;
+}
+
+.sidebar.show {
+  left: 0;
+}
+
+.toggle-button {
+  position: fixed;
+  top: 50%;
+  left: 0;
+  width: 20px;
+  height: 40px;
+  background-color: #eee;
+  border: none;
+  transform: translateY(-50%);
+  padding: 0;
+  z-index: 1;
+}
+
+.arrow {
+  display: block;
+  width: 10px;
+  height: 10px;
+  border-top: 2px solid #333;
+  border-right: 2px solid #333;
+  transform: rotate(-45deg);
+  margin: auto;
+}
+
+.arrow.up {
+  transform: rotate(135deg);
+}
