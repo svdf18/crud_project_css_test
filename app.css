@@ -1,3 +1,5 @@
+/* overall styling */
+
 body {
   font-family: sans-serif;
   color: #2f3191;
@@ -11,6 +13,8 @@ body {
     --white: #fff;
     --font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   }
+
+/* table main styling */
 
 .periodic-table {
   display: grid;
@@ -47,6 +51,61 @@ body {
   font-size: 30px;
   font-weight: bold;
 }
+
+/* formview styling */
+
+section {
+  background-color: var(--white);
+  border: 4px solid #2f3191;
+  margin: 100px;
+  padding: 4em 4em 4em 4em;
+  text-align: center;
+  align-items: center;
+}
+
+.formcheckbutton {
+  font-weight: 300;
+  font-size: 1.2em;
+  text-align: center;
+  cursor: pointer;
+  border: none;
+  border-radius: 0;
+  color: var(--blue);
+  background-color: var(--white);
+  border: 2px solid var(--blue);
+  border-radius: 50%;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  padding: 1em 0.5em;
+  width: 13.5%;
+  max-width: 380px;
+}
+
+formcheckbutton:hover {
+  background-color: var(--blue);
+  color: var(--white);
+}
+
+
+input {
+  margin: 1em auto;
+  width: 100%;
+  max-width: 350px;
+  padding: 1em;
+  box-sizing: border-box;
+  border: none;
+  border-bottom: 2px solid #2f3191;
+  background: var(--white);
+  color: var(--blue)
+}
+
+.element-number {
+  font-size: 5em;
+  color: var(--blue);
+
+}
+
+/* sidebar styling */
 
   .sidebar {
   position: fixed;

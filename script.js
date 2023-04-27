@@ -114,7 +114,7 @@ return div;
 
 // Function to create a button element with given id and textContent
 function createButtonElement(id, textContent) {
-const button = document.createElement("button");
+const button = document.createElement("formcheckbutton");
 button.id = id;
 button.textContent = textContent;
 return button;
