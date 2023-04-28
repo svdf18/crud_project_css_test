@@ -51,12 +51,22 @@ function addEmptyElement(element) {
   const emptyElementBox = document.createElement('div');
   emptyElementBox.classList.add('empty-element');
   emptyElementBox.dataset.atomicNumber = element.number;
+
+  // Add the data-group and data-period attributes
+  emptyElementBox.dataset.group = element.group;
+  emptyElementBox.dataset.period = element.period;
+
   emptyElementBox.innerHTML = `
-    <div class="element-name-main-view">${""}</div>
+    <div class="element-name-main-view hide">${element.name}</div>
     <div class="element-number-main-view">${element.number}</div>
-    <div class="element-symbol-main-view">${""}</div>
+    <div class="element-symbol-main-view hide">${element.symbol}</div>
     <div class="element-mass-main-view">${element.atomic_mass}</div>
   `;
+
+  // Set the grid-row and grid-column for the element
+  emptyElementBox.style.gridColumn = element.xpos;
+  emptyElementBox.style.gridRow = element.ypos;
+
   // Append the new empty element box to the periodic table
   periodicTable.appendChild(emptyElementBox);
 
@@ -70,6 +80,9 @@ function addEmptyElement(element) {
     showFormView(element);
   }
 }
+
+
+
 
 // Show the form view for the given element
 function showFormView(element) {
@@ -128,15 +141,13 @@ function createSidebar() {
   // Add input fields and search button to sidebar container
   sidebar.appendChild(atomicNumberInput);
   sidebar.appendChild(elementInput);
-  sidebar.appendChild(elementSymbolInput); // Fixed the variable name
+  sidebar.appendChild(elementSymbolInput);
   sidebar.appendChild(searchButton);
 
-
-// Add live search functionality
+  // Add live search functionality
 atomicNumberInput.addEventListener("input", () => liveSearch(atomicNumberInput, elementInput, elementSymbolInput));
 elementInput.addEventListener("input", () => liveSearch(atomicNumberInput, elementInput, elementSymbolInput));
 elementSymbolInput.addEventListener("input", () => liveSearch(atomicNumberInput, elementInput, elementSymbolInput));
-
 
   // Create toggle button to show/hide sidebar
   const toggleButton = document.createElement("button");
@@ -144,7 +155,7 @@ elementSymbolInput.addEventListener("input", () => liveSearch(atomicNumberInput,
   const arrow = document.createElement("span");
   arrow.classList.add("arrow");
   toggleButton.appendChild(arrow);
-  document.body.appendChild(toggleButton);
+  sidebar.appendChild(toggleButton);
 
   // Add event listener to toggle button
   toggleButton.addEventListener("click", () => {
