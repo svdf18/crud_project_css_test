@@ -50,7 +50,10 @@ function addEmptyElement(element) {
   emptyElementBox.classList.add('empty-element');
   emptyElementBox.dataset.atomicNumber = element.number;
   emptyElementBox.innerHTML = `
-    <div class="atomic-number">${element.number}</div>
+    <div class="element-name-main-view">${""}</div>
+    <div class="element-number-main-view">${element.number}</div>
+    <div class="element-symbol-main-view">${""}</div>
+    <div class="element-mass-main-view">${element.atomic_mass}</div>
   `;
   // Append the new empty element box to the periodic table
   periodicTable.appendChild(emptyElementBox);
@@ -114,7 +117,7 @@ return div;
 
 // Function to create a button element with given id and textContent
 function createButtonElement(id, textContent) {
-const button = document.createElement("formcheckbutton");
+const button = document.createElement("button");
 button.id = id;
 button.textContent = textContent;
 return button;
@@ -138,7 +141,7 @@ const sidebar = document.createElement("div");
 sidebar.classList.add("sidebar");
 
 // Create input fields
-const atomicNumberInput = createInputElement("text", "atomic-number", "Atomic Number");
+const atomicNumberInput = createInputElement("text", "element-number", "Atomic Number");
 const elementInput = createInputElement("text", "element", "Element");
 const elementNumberInput = createInputElement("text", "element-number", "Element Number");
 
