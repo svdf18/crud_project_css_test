@@ -1,5 +1,7 @@
 "use strict";
 
+let elementInput;
+
 // Define the Firebase database endpoint
 const endpoint = "https://periodic-table-json-default-rtdb.europe-west1.firebasedatabase.app/";
 
@@ -8,7 +10,7 @@ window.addEventListener("load", initApp);
 
 // Asynchronously initialize the application
 async function initApp() {
-console.log("initApp code is working!");
+  console.log("initApp code is working!");
   // Retrieve the element data from the Firebase database
   const elements = await getElementData();
   // Add an empty element for each element retrieved
@@ -98,141 +100,163 @@ function showFormView(element) {
   closeDialog();
 }
 
-// Function to create an input element with given type, id and placeholder attributes
-function createInputElement(type, id, placeholder) {
-const input = document.createElement("input");
-input.type = type;
-input.id = id;
-input.placeholder = placeholder;
-return input;
-}
-
-// Function to create a div element with given className and textContent
-function createDivElement(className, textContent) {
-const div = document.createElement("div");
-div.classList.add(className);
-div.textContent = textContent;
-return div;
-}
-
-// Function to create a button element with given id and textContent
-function createButtonElement(id, textContent) {
-const button = document.createElement("button");
-button.id = id;
-button.textContent = textContent;
-return button;
-}
-
 // Function to close dialog when clicked outside of it
 function closeDialog() {
-const dialog = document.querySelector("dialog");
+  const dialog = document.querySelector("dialog");
 
-dialog.addEventListener("click", (event) => {
-if (event.target === dialog) {
-dialog.close();
-}
-});
+  dialog.addEventListener("click", (event) => {
+    if (event.target === dialog) {
+      dialog.close();
+    }
+  });
 }
 
 // Function to create a sidebar with input fields and search button
 function createSidebar() {
-// Create sidebar container
-const sidebar = document.createElement("div");
-sidebar.classList.add("sidebar");
+  // Create sidebar container
+  const sidebar = document.createElement("div");
+  sidebar.classList.add("sidebar");
 
-// Create input fields
-const atomicNumberInput = createInputElement("text", "element-number", "Atomic Number");
-const elementInput = createInputElement("text", "element", "Element");
-const elementNumberInput = createInputElement("text", "element-number", "Element Number");
+  // Create input fields
+  const atomicNumberInput = createInputElement("text", "atomic-number", "Atomic Number");
+  elementInput = createInputElement("text", "element", "Element");
+  const elementSymbolInput = createInputElement("text", "element-symbol", "Element Symbol");
 
-// Create search button
-const searchButton = createButtonElement("search-button", "Search");
+  // Create search button
+  const searchButton = createButtonElement("search-button", "Search");
 
-// Add input fields and search button to sidebar container
-sidebar.appendChild(atomicNumberInput);
-sidebar.appendChild(elementInput);
-sidebar.appendChild(elementNumberInput);
-sidebar.appendChild(searchButton);
-
-// Create toggle button to show/hide sidebar
-const toggleButton = document.createElement("button");
-toggleButton.classList.add("toggle-button");
-const arrow = document.createElement("span");
-arrow.classList.add("arrow");
-toggleButton.appendChild(arrow);
-document.body.appendChild(toggleButton);
-
-// Add event listener to toggle button
-toggleButton.addEventListener("click", () => {
-sidebar.classList.toggle("show");
-arrow.classList.toggle("up");
-});
-
-// Add sidebar container and search button event listener to body
-document.body.appendChild(sidebar);
-searchButton.addEventListener("click", () => {
-// Get input field values
-const atomicNumberValue = atomicNumberInput.value;
-const elementValue = elementInput.value;
-const elementNumberValue = elementNumberInput.value;
+  // Add input fields and search button to sidebar container
+  sidebar.appendChild(atomicNumberInput);
+  sidebar.appendChild(elementInput);
+  sidebar.appendChild(elementSymbolInput); // Fixed the variable name
+  sidebar.appendChild(searchButton);
 
 
-// Perform search logic here
+// Add live search functionality
+atomicNumberInput.addEventListener("input", () => liveSearch(atomicNumberInput, elementInput, elementSymbolInput));
+elementInput.addEventListener("input", () => liveSearch(atomicNumberInput, elementInput, elementSymbolInput));
+elementSymbolInput.addEventListener("input", () => liveSearch(atomicNumberInput, elementInput, elementSymbolInput));
 
-// Get all empty elements in periodic table
+
+  // Create toggle button to show/hide sidebar
+  const toggleButton = document.createElement("button");
+  toggleButton.classList.add("toggle-button");
+  const arrow = document.createElement("span");
+  arrow.classList.add("arrow");
+  toggleButton.appendChild(arrow);
+  document.body.appendChild(toggleButton);
+
+  // Add event listener to toggle button
+  toggleButton.addEventListener("click", () => {
+    sidebar.classList.toggle("show");
+    arrow.classList.toggle("up");
+  });
+
+  // Add sidebar container and search button event listener to body
+  document.body.appendChild(sidebar);
+  searchButton.addEventListener("click", performSearch);
+}
+
+// Function to perform live search based on input value
+function liveSearch(atomicNumberInput, elementInput, elementSymbolInput) {
+  const atomicNumberValue = atomicNumberInput.value.trim();
+  const elementValue = elementInput.value.trim().toLowerCase();
+  const elementSymbolValue = elementSymbolInput.value.trim();
+
+  if (atomicNumberValue === "" && elementValue === "" && elementSymbolValue === "") {
+    // If all input fields are empty, reset the display of all empty elements
+    resetEmptyElementsDisplay();
+  } else {
+    // Get all empty elements in the periodic table
     const periodicTable = document.querySelector(".periodic-table");
     const emptyElements = periodicTable.querySelectorAll(".empty-element");
 
-    // Loop through empty elements and hide/show them based on search criteria
+    // Loop through empty elements and hide/show them based on input values
     emptyElements.forEach((emptyElement) => {
-      const atomicNumber = emptyElement.dataset.atomicNumber;
-      const elementName = emptyElement.querySelector(".element-name").textContent;
-      const elementNumber = emptyElement.querySelector(".element-number").textContent;
+      const elementName = emptyElement.querySelector(".element-name-main-view").textContent;
+      const elementNumber = emptyElement.querySelector(".element-number-main-view").textContent;
+      const elementSymbol = emptyElement.querySelector(".element-symbol-main-view").textContent;
 
       if (
-        (atomicNumberValue && atomicNumberValue !== atomicNumber) ||
-        (elementValue && !elementName.toLowerCase().includes(elementValue.toLowerCase())) ||
-        (elementNumberValue && elementNumberValue !== elementNumber)
+        (elementValue === "" || elementName.toLowerCase().includes(elementValue)) &&
+        (atomicNumberValue === "" || elementNumber.includes(atomicNumberValue)) &&
+        (elementSymbolValue === "" || elementSymbol.toLowerCase().includes(elementSymbolValue.toLowerCase()))
       ) {
-        emptyElement.style.display = "none";
-      } else {
         emptyElement.style.display = "flex";
+      } else {
+        emptyElement.style.display = "none";
       }
     });
+  }
+}
+
+// Function to reset the display of all empty elements
+function resetEmptyElementsDisplay() {
+  const periodicTable = document.querySelector(".periodic-table");
+  const emptyElements = periodicTable.querySelectorAll(".empty-element");
+  emptyElements.forEach((emptyElement) => {
+    emptyElement.style.display = "flex";
   });
+}
 
-// This function creates a new HTML input element with a specified type, id and placeholder
+// Function to create an input element with given type, id and placeholder attributes
 function createInputElement(type, id, placeholder) {
-
-  // create a new input element
-  const input = document.createElement("input"); 
-
-  // set the input element's type to the provided type argument
-  input.type = type; 
-
-  // set the input element's id to the provided id argument
-  input.id = id; 
-
-  // set the input element's placeholder to the provided placeholder argument
+  const input = document.createElement("input");
+  input.type = type;
+  input.id = id;
   input.placeholder = placeholder;
-
-  // return the newly created input element
-  return input; 
+  return input;
 }
 
-// This function creates a new HTML button element with a specified id and text content
+// Function to create a div element with given className and textContent
+function createDivElement(className, textContent) {
+  const div = document.createElement("div");
+  div.classList.add(className);
+  div.textContent = textContent;
+  return div;
+}
+
+// Function to create a button element with given id and textContent
 function createButtonElement(id, textContent) {
-
-  // create a new button element
-  const button = document.createElement("button"); 
-
-  // set the button element's id to the provided id argument
-  button.id = id; 
-
-  // set the button element's text content to the provided textContent argument
+  const button = document.createElement("button");
+  button.id = id;
   button.textContent = textContent;
-
-  // return the newly created button element
-  return button; 
+  return button;
 }
+
+// Function to perform search on atomic number, element name or element symbol
+function performSearch() {
+  const atomicNumberInput = document.getElementById("atomic-number");
+  const elementInput = document.getElementById("element");
+  const elementSymbolInput = document.getElementById("element-symbol");
+
+  const atomicNumberValue = atomicNumberInput.value.trim();
+  const elementValue = elementInput.value.trim().toLowerCase();
+  const elementSymbolValue = elementSymbolInput.value.trim();
+
+  // If no input provided, return
+  if (atomicNumberValue === "" && elementValue === "" && elementSymbolValue === "") {
+    return;
+  }
+
+  // Get all empty elements in the periodic table
+  const periodicTable = document.querySelector(".periodic-table");
+  const emptyElements = periodicTable.querySelectorAll(".empty-element");
+
+  // Loop through empty elements and hide/show them based on input
+  emptyElements.forEach((emptyElement) => {
+    const elementName = emptyElement.querySelector(".element-name-main-view").textContent;
+    const elementNumber = emptyElement.querySelector(".element-number-main-view").textContent;
+    const elementSymbol = emptyElement.querySelector(".element-symbol-main-view").textContent;
+
+    if (elementValue !== "" && !elementName.toLowerCase().includes(elementValue)) {
+      emptyElement.style.display = "none";
+    } else if (atomicNumberValue !== "" && elementNumber !== atomicNumberValue) {
+      emptyElement.style.display = "none";
+    } else if (elementSymbolValue !== "" && elementSymbol !== elementSymbolValue) {
+      emptyElement.style.display = "none";
+    } else {
+      emptyElement.style.display = "flex";
+    }
+  });
 }
