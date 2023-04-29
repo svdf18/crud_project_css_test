@@ -52,6 +52,10 @@ function addEmptyElement(element) {
   emptyElementBox.classList.add('empty-element');
   emptyElementBox.dataset.atomicNumber = element.number;
 
+  // Replace spaces with hyphens in the category name and add it as a class name
+  const categoryClassName = element.category.replace(/ /g, '-');
+  emptyElementBox.classList.add(categoryClassName);
+
   // Add the data-group and data-period attributes
   emptyElementBox.dataset.group = element.group;
   emptyElementBox.dataset.period = element.period;
@@ -80,8 +84,6 @@ function addEmptyElement(element) {
     showFormView(element);
   }
 }
-
-
 
 
 // Show the form view for the given element

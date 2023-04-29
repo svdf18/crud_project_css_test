@@ -8,7 +8,7 @@
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
   grid-template-rows: repeat(auto-fill, minmax(60px, 1fr));
-  grid-gap: 5px;
+  grid-gap: 3px;
   width: 100%;
   font-size: calc(8px + 0.3vw);
 }
@@ -98,4 +98,52 @@ input[type="text"] {
 
 button {
   padding: 5px;
+}
+
+.lanthanide {
+  background-color: #ffc0cb;
+}
+
+.actinide {
+  background-color: #f5f5dc;
+}
+
+.diatomic-nonmetal {
+  background-color: #ff6666;
+}
+
+.noble-gas {
+  background-color: #00cc99;
+}
+
+.alkaline-earth-metal {
+  background-color: #3399ff;
+}
+
+.metalloid {
+  background-color: #ff9933;
+}
+
+.polyatomic-nonmetal {
+  background-color: #cc99cc;
+}
+
+.alkali-metal {
+  background-color: #cccccc;
+}
+
+.post-transition-metal {
+  background-color: #cc9966;
+}
+
+.unknown {
+  background-color: #ffffff;
+}
+
+.probably-transition-metal {
+  background-color: #99ccff;
+}
+
+.transition-metal {
+  background-color: #99ccff;
 }
