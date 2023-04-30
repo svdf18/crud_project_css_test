@@ -8,6 +8,7 @@ const endpoint = "https://periodic-table-json-default-rtdb.europe-west1.firebase
 // Initialize the application when the window is loaded
 window.addEventListener("load", initApp);
 
+
 // Asynchronously initialize the application
 async function initApp() {
   console.log("initApp code is working!");
@@ -22,6 +23,7 @@ async function initApp() {
   createSidebar();
 }
 
+
 // Asynchronously retrieve the element data from the Firebase database
 async function getElementData() {
   const response = await fetch(`${endpoint}/elements.json`);
@@ -30,6 +32,7 @@ async function getElementData() {
   const elements = prepareElementData(data);
   return elements;
 }
+
 
 // Prepare the element data by adding an ID for each element
 function prepareElementData(dataObject) {
@@ -42,6 +45,7 @@ function prepareElementData(dataObject) {
 
   return elementDataArray;
 }
+
 
 // Add an empty element to the periodic table for the given element
 function addEmptyElement(element) {
@@ -61,10 +65,10 @@ function addEmptyElement(element) {
   emptyElementBox.dataset.period = element.period;
 
   emptyElementBox.innerHTML = `
-    <div class="element-name-main-view hide">${element.name}</div>
-    <div class="element-number-main-view">${element.number}</div>
-    <div class="element-symbol-main-view hide">${element.symbol}</div>
-    <div class="element-mass-main-view">${element.atomic_mass}</div>
+  <div class="element-name-main-view hide">${element.name}</div>
+  <div class="element-number-main-view">${element.number}</div>
+  <div class="element-symbol-main-view hide">${element.symbol}</div>
+  <div class="element-mass-main-view">${element.atomic_mass}</div>
   `;
 
   // Set the grid-row and grid-column for the element
@@ -75,27 +79,28 @@ function addEmptyElement(element) {
   periodicTable.appendChild(emptyElementBox);
 
   // Add a click event listener to the new empty element box
-  emptyElementBox.addEventListener("click", clickElement);
+  emptyElementBox.addEventListener("click", () => clickElement(emptyElementBox));
 
   // Define the function to execute when the empty element box is clicked
-  function clickElement() {
+  function clickElement(emptyElement) {
     console.log("clicked");
     // Show the form view for the given element
-    showFormView(element);
+    showFormView(element, emptyElement);
   }
 }
 
 
 // Show the form view for the given element
-function showFormView(element) {
+function showFormView(element, emptyElement) {
   // Retrieve the dialog element
   const dialog = document.querySelector("dialog");
+
   // Clear the contents of the dialog element
   dialog.innerHTML = "";
   console.log(element);
 
   // Show the dialog element
-  dialog.showModal(element);
+  dialog.showModal();
 
   // Create input elements for the element name, symbol, and mass
   const inputName = createInputElement("text", "element-name", "Enter the element name");
@@ -104,16 +109,74 @@ function showFormView(element) {
   const divElementMass = createDivElement("element-mass", element.atomic_mass);
   const buttonAddElement = createButtonElement("btn-add-element", "⍻");
 
+  const errorDiv = document.createElement("div");
+  errorDiv.classList.add("error-message");
+  
+
+function checkInputValues() {
+  const inputNameValue = capitalizeFirstLetter(inputName.value);
+  const inputSymbolValue = capitalizeFirstLetter(inputSymbol.value);
+
+  errorDiv.textContent = "";
+
+  if (inputNameValue === element.name && inputSymbolValue === element.symbol) {
+    console.log("Both correct!");
+
+    const closeDialog = document.querySelector("dialog");
+    closeDialog.close();
+
+    const nameElement = emptyElement.querySelector('.element-name-main-view');
+    const symbolElement = emptyElement.querySelector('.element-symbol-main-view');
+
+    nameElement.textContent = inputNameValue;
+    symbolElement.textContent = inputSymbolValue;
+
+    nameElement.classList.remove('hide');
+    symbolElement.classList.remove('hide');
+  } else if (inputNameValue !== element.name && inputSymbolValue === element.symbol) {
+    errorDiv.textContent = "Incorrect element name!";
+  } else if (inputNameValue === element.name && inputSymbolValue !== element.symbol) {
+    errorDiv.textContent = "Incorrect element symbol!";
+  } else if (inputNameValue !== element.name && inputSymbolValue !== element.symbol) {
+    errorDiv.textContent = "Incorrect name and symbol!";
+  }
+}
+
+
+  function capitalizeFirstLetter(str) {
+  return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+  }
+
+
+  buttonAddElement.addEventListener("click", checkInputValues);
+
+  inputName.addEventListener("keyup", (event) => {
+    if (event.key === "Enter") {
+      checkInputValues();
+    }
+  });
+
+  inputSymbol.addEventListener("keyup", (event) => {
+    if (event.key === "Enter") {
+      checkInputValues();
+    }
+  });
+
   // Append the input elements and button to the dialog element
   dialog.appendChild(inputName);
   dialog.appendChild(divElementNumber);
   dialog.appendChild(inputSymbol);
   dialog.appendChild(divElementMass);
   dialog.appendChild(buttonAddElement);
+  dialog.appendChild(errorDiv);
+
+  // Put cursor into name box, when clicking on an element
+  inputName.focus();
 
   // Close the dialog when the user clicks outside of it
   closeDialog();
 }
+
 
 // Function to close dialog when clicked outside of it
 function closeDialog() {
@@ -125,6 +188,7 @@ function closeDialog() {
     }
   });
 }
+
 
 // Function to create a sidebar with input fields and search button
 function createSidebar() {
@@ -170,6 +234,7 @@ elementSymbolInput.addEventListener("input", () => liveSearch(atomicNumberInput,
   searchButton.addEventListener("click", performSearch);
 }
 
+
 // Function to perform live search based on input value
 function liveSearch(atomicNumberInput, elementInput, elementSymbolInput) {
   const atomicNumberValue = atomicNumberInput.value.trim();
@@ -203,6 +268,7 @@ function liveSearch(atomicNumberInput, elementInput, elementSymbolInput) {
   }
 }
 
+
 // Function to reset the display of all empty elements
 function resetEmptyElementsDisplay() {
   const periodicTable = document.querySelector(".periodic-table");
@@ -211,6 +277,7 @@ function resetEmptyElementsDisplay() {
     emptyElement.style.display = "flex";
   });
 }
+
 
 // Function to create an input element with given type, id and placeholder attributes
 function createInputElement(type, id, placeholder) {
@@ -221,6 +288,7 @@ function createInputElement(type, id, placeholder) {
   return input;
 }
 
+
 // Function to create a div element with given className and textContent
 function createDivElement(className, textContent) {
   const div = document.createElement("div");
@@ -229,6 +297,7 @@ function createDivElement(className, textContent) {
   return div;
 }
 
+
 // Function to create a button element with given id and textContent
 function createButtonElement(id, textContent) {
   const button = document.createElement("button");
@@ -236,6 +305,7 @@ function createButtonElement(id, textContent) {
   button.textContent = textContent;
   return button;
 }
+
 
 // Function to perform search on atomic number, element name or element symbol
 function performSearch() {
