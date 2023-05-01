@@ -115,13 +115,11 @@ function showFormView(element, emptyElement) {
 
 function checkInputValues() {
   const inputNameValue = capitalizeFirstLetter(inputName.value.trim());
-  const inputSymbolValue = capitalizeFirstLetter(inputSymbol.value).trim();
+  const inputSymbolValue = capitalizeFirstLetter(inputSymbol.value.trim());
 
   errorDiv.textContent = "";
 
   if (inputNameValue === element.name && inputSymbolValue === element.symbol) {
-    console.log("Both correct!");
-
     const closeDialog = document.querySelector("dialog");
     closeDialog.close();
 
