@@ -90,13 +90,55 @@ function clickElement(emptyElement) {
   if (nameElement.classList.contains('hide')) {
     showFormView(element, emptyElement);
   } else {
-    showDetailView();
+    showDetailView(element);
   }}
 }
 
 
-function showDetailView() {
+function showDetailView(element) {
   console.log("Detail view");
+
+  const detailView = document.getElementById("detail-view");
+  detailView.innerHTML = "";
+  console.log(element);
+  detailView.showModal();
+
+  const inputField = document.createElement("input");
+  inputField.type = "text";
+  inputField.className = "input-field";
+
+  const savedText = document.createElement("textarea");
+  savedText.className = "saved-text";
+  savedText.readOnly = true;
+
+  const saveButton = document.createElement("button");
+  saveButton.textContent = "Save";
+  saveButton.addEventListener("click", () => {
+    const newText = inputField.value;
+    savedText.value += newText + "\n";
+    inputField.value = "";
+    savedText.readOnly = true;
+    savedText.classList.remove("editable");
+  });
+
+  const editButton = document.createElement("button");
+  editButton.textContent = "Edit";
+  editButton.addEventListener("click", () => {
+    savedText.readOnly = false;
+    savedText.classList.add("editable");
+  });
+
+  const deleteButton = document.createElement("button");
+  deleteButton.textContent = "Delete";
+  deleteButton.addEventListener("click", () => {
+    savedText.value = "";
+  });
+
+  detailView.appendChild(inputField);
+  detailView.appendChild(saveButton);
+  detailView.appendChild(editButton);
+  detailView.appendChild(deleteButton);
+  detailView.appendChild(savedText);
 }
 
 
