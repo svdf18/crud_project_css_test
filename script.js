@@ -68,7 +68,7 @@ function addEmptyElement(element) {
   <div class="element-name-main-view hide">${element.name}</div>
   <div class="element-number-main-view">${element.number}</div>
   <div class="element-symbol-main-view hide">${element.symbol}</div>
-  <div class="element-mass-main-view">${element.atomic_mass}</div>
+  <div class="element-mass-main-view">${element.atomic_mass.toFixed(2)}</div>
   `;
 
   // Set the grid-row and grid-column for the element
