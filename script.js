@@ -132,11 +132,18 @@ function checkInputValues() {
     nameElement.classList.remove('hide');
     symbolElement.classList.remove('hide');
   } else if (inputNameValue !== element.name && inputSymbolValue === element.symbol) {
-    errorDiv.textContent = "Incorrect element name!";
+    errorDiv.textContent = "Name incorrect!";
+    inputName.value = "";
+    inputName.focus();
   } else if (inputNameValue === element.name && inputSymbolValue !== element.symbol) {
-    errorDiv.textContent = "Incorrect element symbol!";
+    errorDiv.textContent = "Symbol incorrect!";
+    inputSymbol.value = "";
+    inputSymbol.focus();
   } else if (inputNameValue !== element.name && inputSymbolValue !== element.symbol) {
-    errorDiv.textContent = "Incorrect name and symbol!";
+    errorDiv.textContent = "Both incorrect!";
+    inputName.value = "";
+    inputSymbol.value = "";
+    inputName.focus();
   }
 }
 
