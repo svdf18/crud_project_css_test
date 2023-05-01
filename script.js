@@ -114,8 +114,8 @@ function showFormView(element, emptyElement) {
   
 
 function checkInputValues() {
-  const inputNameValue = capitalizeFirstLetter(inputName.value);
-  const inputSymbolValue = capitalizeFirstLetter(inputSymbol.value);
+  const inputNameValue = capitalizeFirstLetter(inputName.value.trim());
+  const inputSymbolValue = capitalizeFirstLetter(inputSymbol.value).trim();
 
   errorDiv.textContent = "";
 
