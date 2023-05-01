@@ -32,15 +32,16 @@ body {
 }
 
 .empty-element {
-  display: grid;
+  display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  width: 4vw;
+  width: 55spx;
   height: 55px;
   background-color: var(--white);
   border: 1.5px solid var(--blue);
   font-size: 10px;
+  cursor: pointer;
 }
 
 /* .empty-element {
@@ -81,8 +82,8 @@ body {
 .container {
   max-width: 1500px;
   width: 100%;
-  padding: 2% 1%; /* Adjust the top and bottom padding as needed */
-  margin: 0 auto;
+  padding: 1% 1%; /* Adjust the top and bottom padding as needed */
+  margin: 0px 0px 200px auto;
   display: flex;
   justify-content: center;
   align-items: center;
