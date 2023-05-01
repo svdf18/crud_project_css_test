@@ -82,11 +82,21 @@ function addEmptyElement(element) {
   emptyElementBox.addEventListener("click", () => clickElement(emptyElementBox));
 
   // Define the function to execute when the empty element box is clicked
-  function clickElement(emptyElement) {
-    console.log("clicked");
-    // Show the form view for the given element
+function clickElement(emptyElement) {
+  console.log("clicked");
+
+  const nameElement = emptyElement.querySelector('.element-name-main-view');
+
+  if (nameElement.classList.contains('hide')) {
     showFormView(element, emptyElement);
-  }
+  } else {
+    showDetailView();
+  }}
+}
+
+
+function showDetailView() {
+  console.log("Detail view");
 }
 
 
