@@ -82,11 +82,21 @@ function addEmptyElement(element) {
   emptyElementBox.addEventListener("click", () => clickElement(emptyElementBox));
 
   // Define the function to execute when the empty element box is clicked
-  function clickElement(emptyElement) {
-    console.log("clicked");
-    // Show the form view for the given element
+function clickElement(emptyElement) {
+  console.log("clicked");
+
+  const nameElement = emptyElement.querySelector('.element-name-main-view');
+
+  if (nameElement.classList.contains('hide')) {
     showFormView(element, emptyElement);
-  }
+  } else {
+    showDetailView();
+  }}
+}
+
+
+function showDetailView() {
+  console.log("Detail view");
 }
 
 
@@ -132,11 +142,18 @@ function checkInputValues() {
     nameElement.classList.remove('hide');
     symbolElement.classList.remove('hide');
   } else if (inputNameValue !== element.name && inputSymbolValue === element.symbol) {
-    errorDiv.textContent = "Incorrect element name!";
+    errorDiv.textContent = "Name incorrect!";
+    inputName.value = "";
+    inputName.focus();
   } else if (inputNameValue === element.name && inputSymbolValue !== element.symbol) {
-    errorDiv.textContent = "Incorrect element symbol!";
+    errorDiv.textContent = "Symbol incorrect!";
+    inputSymbol.value = "";
+    inputSymbol.focus();
   } else if (inputNameValue !== element.name && inputSymbolValue !== element.symbol) {
-    errorDiv.textContent = "Incorrect name and symbol!";
+    errorDiv.textContent = "Both incorrect!";
+    inputName.value = "";
+    inputSymbol.value = "";
+    inputName.focus();
   }
 }
 
