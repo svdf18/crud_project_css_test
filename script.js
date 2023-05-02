@@ -94,14 +94,43 @@ function clickElement(emptyElement) {
   }}
 }
 
-
 function showDetailView(element) {
-  console.log("Detail view");
+  console.log("detail view")
 
   const detailView = document.getElementById("detail-view");
-  detailView.innerHTML = "";
-  console.log(element);
   detailView.showModal();
+
+  const detailViewElement = document.getElementById("detail-view-element")
+  detailViewElement.innerHTML = `
+    <h2>${element.name}</h2>
+    <p>Number: ${element.number}</p>
+    <p>Symbol: ${element.symbol}</p>
+    <p>Atomic Mass: ${element['atomic-mass']}</p>
+  `;
+  console.log(element)
+
+  closeDetailView()
+}
+
+function closeDetailView() {
+  const detailView = document.getElementById("detail-view");
+  
+  detailView.addEventListener("click", (event) => {
+    if (event.target === detailView) {
+      detailView.close();
+    }
+  });
+}
+
+
+
+function showNoteView(element) {
+  console.log("note view");
+
+  const noteView = document.getElementById("note-view");
+  noteView.innerHTML = "";
+  console.log(element);
+  noteView.showModal();
 
   const inputField = document.createElement("input");
   inputField.type = "text";
@@ -134,11 +163,11 @@ function showDetailView(element) {
     savedText.value = "";
   });
 
-  detailView.appendChild(inputField);
-  detailView.appendChild(saveButton);
-  detailView.appendChild(editButton);
-  detailView.appendChild(deleteButton);
-  detailView.appendChild(savedText);
+  noteView.appendChild(inputField);
+  noteView.appendChild(saveButton);
+  noteView.appendChild(editButton);
+  noteView.appendChild(deleteButton);
+  noteView.appendChild(savedText);
 }
 
 
@@ -400,3 +429,24 @@ function performSearch() {
     }
   });
 }
+
+// detail view setup //
+
+// Get references to the buttons and the detail view display section
+const descriptionButton = document.getElementById("detail-view-description-button");
+const propertiesButton = document.getElementById("detail-view-properties-button");
+const notesButton = document.getElementById("detail-view-notes-button");
+const detailViewDisplay = document.getElementById("detail-view-display");
+
+// Add click event listeners to the buttons
+descriptionButton.addEventListener("click", () => {
+  // Clear the detail view display section
+  detailViewDisplay.innerHTML = "";
+  
+  // Create a new paragraph element with the description text
+  const description = document.createElement("p");
+  description.textContent = element.description;
+  
+  // Add the description element to the detail view display section
+  detailViewDisplay.appendChild(description);
+});

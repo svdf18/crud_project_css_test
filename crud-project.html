@@ -9,15 +9,25 @@
     <title>Document</title>
 </head>
 <body>
-  <main id="main-grid">
     <div class="container">
       <div class="periodic-table"></div>
     </div>
-    <dialog id="dialog"></dialog>
-    <div id="sidebar"></div>
-    <dialog id="detail-view"></dialog>
+      <dialog id="dialog"></dialog>
+        <div id="sidebar"></div>
+          <dialog id="note-view"></dialog>
 
-  </main>
+    <dialog id="detail-view">
+      <section id="detail-view-container">
+          <div id="content-grid">
+            <button class="detail-view-options-button" id="detail-view-description-button">Description</button>
+              <button class="detail-view-options-button" id="detail-view-properties-button">Properties</button>
+                <button class="detail-view-options-button" id="detail-view-notes-button">Notes</button>
+                  <div id="detail-view-element"></div>
+          </div>  
+        <section id="detail-view-display">
+        </section>
+      </section>
+    </dialog>
   <script src="script.js"></script>
 </body>
 </html>
