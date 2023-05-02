@@ -97,23 +97,71 @@ function clickElement(emptyElement) {
 function showDetailView(element) {
   console.log("detail view")
 
+//open dialog
   const detailView = document.getElementById("detail-view");
   detailView.showModal();
 
+  const descriptionButton = document.getElementById("detail-view-description-button");
+  const propertiesButton = document.getElementById("detail-view-properties-button");
+  const notesButton = document.getElementById("detail-view-notes-button");
+
+// insert basic element properties
   const detailViewElement = document.getElementById("detail-view-element")
+  const categoryClassName = element.category.replace(/ /g, '-');
+  detailViewElement.classList.add(categoryClassName);
   detailViewElement.innerHTML = `
     <h2>${element.name}</h2>
     <p>Number: ${element.number}</p>
     <p>Symbol: ${element.symbol}</p>
-    <p>Atomic Mass: ${element['atomic-mass']}</p>
+    <p>Atomic Mass: ${element['atomic_mass']}</p>
   `;
-  console.log(element)
 
-  closeDetailView()
+// add click to detail option buttons
+  descriptionButton.addEventListener("click", function() {
+    displayDescription(element);
+  });
+  propertiesButton.addEventListener("click", function() {
+    displayProperties(element);
+  });
+  notesButton.addEventListener("click", function() {
+    displayNotes(element);
+  });
+
+// add summary to description option
+  function displayDescription(element) {
+    const detailViewDisplay = document.getElementById("detail-view-display");
+    detailViewDisplay.innerHTML = `
+      <img src="${element.bohr_model_image}" alt="A Bohr model of ${element.name}">
+      <p>${element.summary}</p>
+    `;
+  }
+
+// add property list to properties option
+  function displayProperties(element) {
+    const detailViewDisplay = document.getElementById("detail-view-display");
+    detailViewDisplay.innerHTML = `
+      <ul>
+        <li>Name: ${element.name}</li>
+        <li>Symbol: ${element.symbol}</li>
+        <li>Category: ${element.category}</li>
+        <li>Atomic Mass: ${element.atomic_mass}</li>
+        <li>Density: ${element.density}</li>
+        <li>Melting Point: ${element.melting_point}</li>
+        <li>Boiling Point: ${element.boiling_point}</li>
+        <li>Discovered By: ${element.discovered_by}</li>
+        <li>Electronegativity (Pauling): ${element.electronegativity_pauling}</li>
+        <li>Molar Heat Capacity: ${element.molar_heat}</li>
+      </ul>
+    `;
+  }
+
+  closeDetailView();
 }
 
 function closeDetailView() {
   const detailView = document.getElementById("detail-view");
+  const detailViewDisplay = document.getElementById("detail-view-display")
+  detailViewDisplay.innerHTML = "";
   
   detailView.addEventListener("click", (event) => {
     if (event.target === detailView) {
@@ -121,8 +169,6 @@ function closeDetailView() {
     }
   });
 }
-
-
 
 function showNoteView(element) {
   console.log("note view");
