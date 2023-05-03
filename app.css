@@ -13,7 +13,10 @@
 
 body {
   font-family: 'Spinnaker', sans-serif;
-  color: black;
+  font-size: 19px;
+  color: rgb(255, 252, 252);
+  background-image: url(images/3659672.png);
+  background-size: cover;
 }
 
 .container {
@@ -38,7 +41,7 @@ body {
   align-items: center;
   width: 60px;
   height: 55px;
-  background-color: var(--white);
+  background-color: var(--blue);
   border: 1.5px solid var(--blue);
   font-size: 10px;
   cursor: pointer;
@@ -157,6 +160,8 @@ input {
 
 .sidebar.show {
   transform: translateX(0);
+  background-image: url(images/06.png);
+  background-size:contain;
 }
 
 .toggle-button {
@@ -165,12 +170,13 @@ input {
   left: -50px;
   width: 50px;
   height: 50px;
-  background-color: #f0f0f0;
+  background-color: #debebe;
   border: 2px solid #000;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
+  border-radius: 10px;
 }
 
 .arrow {
@@ -190,10 +196,16 @@ input[type="text"] {
   width: 100%;
   padding: 5px;
   box-sizing: border-box;
+  background-color: #d5e1a4;
+  font-family:Georgia, 'Times New Roman', Times, serif;
+  font-size: 0.8em;
+  
+                                                
 }
 
 button {
   padding: 5px;
+  background-color: #d5e1a4;
 }
 
 .lanthanide {
@@ -201,7 +213,7 @@ button {
 }
 
 .actinide {
-  background-color: #f5f5dc;
+  background-color: #dcdc50;
 }
 
 .diatomic-nonmetal {
