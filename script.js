@@ -178,11 +178,11 @@ function showDetailView(element) {
     console.log("whhatt?!?")
   }
 
-  async function createNote(body, id) {
-    console.log(id)
+  async function createNote(body) {
+    console.log(element.number-1);
     const updateMyNote = { notes: body };
     const json = JSON.stringify(updateMyNote);
-    const noteResponse = await fetch(`${endpoint}/elements/${id}.json`, {
+    const noteResponse = await fetch(`${endpoint}/elements/myElements/${element.number-1}.json`, {
       method: "PUT",
       body: json
     });
