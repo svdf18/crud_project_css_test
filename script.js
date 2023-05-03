@@ -19,12 +19,10 @@ async function initApp() {
     addEmptyElement(element);
   }
 
-  const myElements = await getMyElementData();
-  console.log(myElements)
-
   // Create the sidebar
   createSidebar();
 }
+
 
 // Asynchronously retrieve the element data from the Firebase database
 async function getElementData() {
@@ -35,12 +33,6 @@ async function getElementData() {
   return elements;
 }
 
-async function getMyElementData(){
-  const response = await fetch(`${endpoint}/myElements.json`);
-  const data = await response.json();
-  const myElements = prepareElementData(data);
-  return myElements
-}
 
 // Prepare the element data by adding an ID for each element
 function prepareElementData(dataObject) {
@@ -114,7 +106,7 @@ function showDetailView(element) {
   const notesButton = document.getElementById("detail-view-notes-button");
 
 // insert basic element properties
-  const detailViewElement = document.getElementById("detail-view-element");
+  const detailViewElement = document.getElementById("detail-view-element")
   const categoryClassName = element.category.replace(/ /g, '-');
   detailViewElement.classList.add(categoryClassName);
   detailViewElement.innerHTML = `
@@ -153,7 +145,6 @@ function showDetailView(element) {
         <li>Symbol: ${element.symbol}</li>
         <li>Category: ${element.category}</li>
         <li>Atomic Mass: ${element.atomic_mass}</li>
-        <li>Appearance: ${element.appearance}</li>
         <li>Density: ${element.density}</li>
         <li>Melting Point: ${element.melting_point}</li>
         <li>Boiling Point: ${element.boiling_point}</li>
@@ -163,45 +154,6 @@ function showDetailView(element) {
       </ul>
     `;
   }
-
-// display note function
-  function displayNotes(element) {
-    const detailViewDisplay = document.getElementById("detail-view-display");
-    document.querySelector("body").addEventListener("submit", saveNoteClicked)
-    detailViewDisplay.innerHTML = "";
-    detailViewDisplay.innerHTML = `
-      <form>
-        <input type="text" id="body">
-        <button type="submit" id="save-button">Save</button>
-      </form>
-      `;
-      console.log("note display")
-  }
-  
-  function saveNoteClicked(event) {
-    event.preventDefault();
-    const form = event.target;
-    const body = form.body.value
-
-    createNote(body);
-    console.log("whhatt?!?")
-  }
-
-  async function createNote(body) {
-    console.log(element.number-1);
-    const updateMyNote = { notes: body };
-    const json = JSON.stringify(updateMyNote);
-    const noteResponse = await fetch(`${endpoint}/myElements/${element.number-1}.json`, {
-      method: "PUT",
-      body: json
-    });
-  
-    if (noteResponse.ok) {
-      console.log("note created");
-      displayNotes();
-    }
-  }
-
 
   closeDetailView();
 }
@@ -218,12 +170,51 @@ function closeDetailView() {
   });
 }
 
-// 
+function showNoteView(element) {
+  console.log("note view");
 
+  const noteView = document.getElementById("note-view");
+  noteView.innerHTML = "";
+  console.log(element);
+  noteView.showModal();
 
+  const inputField = document.createElement("input");
+  inputField.type = "text";
+  inputField.className = "input-field";
 
+  const savedText = document.createElement("textarea");
+  savedText.className = "saved-text";
+  savedText.readOnly = true;
 
-//
+  const saveButton = document.createElement("button");
+  saveButton.textContent = "Save";
+  saveButton.addEventListener("click", () => {
+    const newText = inputField.value;
+    savedText.value += newText + "\n";
+    inputField.value = "";
+    savedText.readOnly = true;
+    savedText.classList.remove("editable");
+  });
+
+  const editButton = document.createElement("button");
+  editButton.textContent = "Edit";
+  editButton.addEventListener("click", () => {
+    savedText.readOnly = false;
+    savedText.classList.add("editable");
+  });
+
+  const deleteButton = document.createElement("button");
+  deleteButton.textContent = "Delete";
+  deleteButton.addEventListener("click", () => {
+    savedText.value = "";
+  });
+
+  noteView.appendChild(inputField);
+  noteView.appendChild(saveButton);
+  noteView.appendChild(editButton);
+  noteView.appendChild(deleteButton);
+  noteView.appendChild(savedText);
+}
 
 
 // Show the form view for the given element
