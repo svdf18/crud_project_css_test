@@ -106,7 +106,7 @@ function showDetailView(element) {
   const notesButton = document.getElementById("detail-view-notes-button");
 
 // insert basic element properties
-  const detailViewElement = document.getElementById("detail-view-element")
+  const detailViewElement = document.getElementById("detail-view-element");
   const categoryClassName = element.category.replace(/ /g, '-');
   detailViewElement.classList.add(categoryClassName);
   detailViewElement.innerHTML = `
@@ -145,6 +145,7 @@ function showDetailView(element) {
         <li>Symbol: ${element.symbol}</li>
         <li>Category: ${element.category}</li>
         <li>Atomic Mass: ${element.atomic_mass}</li>
+        <li>Appearance: ${element.appearance}</li>
         <li>Density: ${element.density}</li>
         <li>Melting Point: ${element.melting_point}</li>
         <li>Boiling Point: ${element.boiling_point}</li>
@@ -154,6 +155,12 @@ function showDetailView(element) {
       </ul>
     `;
   }
+
+// display note function
+  function displayNotes(element) {
+    const detailViewDisplay = document.getElementById("detail-view-display");
+    showNoteView(element);
+  }    
 
   closeDetailView();
 }
