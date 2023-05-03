@@ -33,7 +33,6 @@ async function getElementData() {
   return elements;
 }
 
-
 // Prepare the element data by adding an ID for each element
 function prepareElementData(dataObject) {
   const elementDataArray = [];
@@ -159,8 +158,41 @@ function showDetailView(element) {
 // display note function
   function displayNotes(element) {
     const detailViewDisplay = document.getElementById("detail-view-display");
-    showNoteView(element);
-  }    
+    document.querySelector("body").addEventListener("submit", saveNoteClicked)
+    detailViewDisplay.innerHTML = "";
+    detailViewDisplay.innerHTML = `
+      <form>
+        <input type="text" id="body">
+        <button type="submit" id="save-button">Save</button>
+      </form>
+      `;
+      console.log("note display")
+  }
+  
+  function saveNoteClicked(event) {
+    event.preventDefault();
+    const form = event.target;
+    const body = form.body.value
+
+    createNote(body);
+    console.log("whhatt?!?")
+  }
+
+  async function createNote(body, id) {
+    console.log(id)
+    const updateMyNote = { notes: body };
+    const json = JSON.stringify(updateMyNote);
+    const noteResponse = await fetch(`${endpoint}/elements/${id}.json`, {
+      method: "PUT",
+      body: json
+    });
+  
+    if (noteResponse.ok) {
+      console.log("note created");
+      displayNotes();
+    }
+  }
+
 
   closeDetailView();
 }
@@ -176,6 +208,13 @@ function closeDetailView() {
     }
   });
 }
+
+// 
+
+
+
+
+//
 
 function showNoteView(element) {
   console.log("note view");
