@@ -317,3 +317,44 @@ button {
   gap: 10px;
   justify-content: space-evenly;
 }
+
+.checkboxes-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.checkbox-wrapper {
+  display: flex;
+  align-items: center;
+}
+
+.sort-buttons-container {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+button.sort-alphabetically-button,
+button.sort-numerically-button {
+  font-weight: 300;
+  font-size: 1em;
+  text-align: center;
+  cursor: pointer;
+  border: none;
+  border-radius: 0;
+  color: var(--blue);
+  background-color: var(--white);
+  border: 2px solid var(--blue);
+  border-radius: 5px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  padding: 5px 10px;
+}
+
+button.sort-alphabetically-button:hover,
+button.sort-numerically-button:hover {
+  background-color: var(--blue);
+  color: var(--white);
+}

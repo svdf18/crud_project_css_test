@@ -337,6 +337,38 @@ function closeDialog() {
   });
 }
 
+function sortElementsAlphabetically() {
+  const searchResultsContainer = document.querySelector(".search-results-container");
+  const searchResultItems = Array.from(searchResultsContainer.children);
+
+  searchResultItems.sort((a, b) => {
+    const nameA = a.querySelector(".element-name-main-view").textContent;
+    const nameB = b.querySelector(".element-name-main-view").textContent;
+
+    return nameA.localeCompare(nameB);
+  });
+
+  searchResultItems.forEach((item) => {
+    searchResultsContainer.appendChild(item);
+  });
+}
+
+function sortElementsNumerically() {
+  const searchResultsContainer = document.querySelector(".search-results-container");
+  const searchResultItems = Array.from(searchResultsContainer.children);
+
+  searchResultItems.sort((a, b) => {
+    const numberA = parseInt(a.querySelector(".element-number-main-view").textContent);
+    const numberB = parseInt(b.querySelector(".element-number-main-view").textContent);
+
+    return numberA - numberB;
+  });
+
+  searchResultItems.forEach((item) => {
+    searchResultsContainer.appendChild(item);
+  });
+}
+
 
 function createSidebar() {
   // Create sidebar container
@@ -353,11 +385,40 @@ function createSidebar() {
 
   // Create input fields
   const atomicNumberInput = createInputElement("text", "atomic-number", "Atomic Number");
-  elementInput = createInputElement("text", "element", "Element");
+  const elementInput = createInputElement("text", "element", "Element");
   const elementSymbolInput = createInputElement("text", "element-symbol", "Element Symbol");
 
   // Create search button
   const searchButton = createButtonElement("search-button", "Search");
+
+  // Create sort dropdown container
+  const sortDropdownContainer = document.createElement("div");
+  sortDropdownContainer.classList.add("sort-dropdown-container");
+
+  // Create sort label
+  const sortLabel = document.createElement("span");
+  sortLabel.classList.add("sort-label");
+  sortLabel.textContent = "Sort By: ";
+
+  // Create sort dropdown select element
+  const sortDropdownSelect = document.createElement("select");
+  sortDropdownSelect.classList.add("sort-dropdown-select");
+
+  // Create sort options
+  const sortOptions = [
+    { value: "alphabetical", label: "Element" },
+    { value: "numeric", label: "Atomic number" }
+  ];
+
+  sortOptions.forEach((option) => {
+    const sortOption = document.createElement("option");
+    sortOption.value = option.value;
+    sortOption.textContent = option.label;
+    sortDropdownSelect.appendChild(sortOption);
+  });
+
+  // Add event listener to sort dropdown
+  sortDropdownSelect.addEventListener("change", handleSortSelection);
 
   // Add input fields and search button to input fields container
   inputFieldsContainer.appendChild(atomicNumberInput);
@@ -365,8 +426,13 @@ function createSidebar() {
   inputFieldsContainer.appendChild(elementSymbolInput);
   inputFieldsContainer.appendChild(searchButton);
 
-  // Add input fields container and search results container to sidebar container
+  // Add sort label and dropdown select to sort dropdown container
+  sortDropdownContainer.appendChild(sortLabel);
+  sortDropdownContainer.appendChild(sortDropdownSelect);
+
+  // Add input fields container, sort dropdown container, and search results container to sidebar container
   sidebar.appendChild(inputFieldsContainer);
+  sidebar.appendChild(sortDropdownContainer);
   sidebar.appendChild(searchResultsContainer);
 
   // Add live search functionality
@@ -378,8 +444,6 @@ function createSidebar() {
   const toggleButton = document.createElement("button");
   toggleButton.classList.add("toggle-button");
   const arrow = document.createElement("span");
- 
-
   arrow.classList.add("arrow");
   toggleButton.appendChild(arrow);
   sidebar.appendChild(toggleButton);
@@ -393,8 +457,64 @@ function createSidebar() {
   // Add sidebar container and search button event listener to body
   document.body.appendChild(sidebar);
   searchButton.addEventListener("click", performSearch);
-}
 
+  // Function to handle sort selection
+  function handleSortSelection() {
+    const selectedValue = sortDropdownSelect.value;
+    if (selectedValue === "alphabetical") {
+      sortElementsAlphabetically();
+   
+    } else if (selectedValue === "numeric") {
+      sortElementsNumerically();
+    }
+  }
+
+  // Function to sort elements alphabetically
+  function sortElementsAlphabetically() {
+    const searchResultsContainer = document.querySelector(".search-results-container");
+    const searchResultItems = Array.from(searchResultsContainer.querySelectorAll(".search-result-item"));
+
+    searchResultItems.sort((a, b) => {
+      const nameA = a.querySelector(".element-name-main-view").textContent.toLowerCase();
+      const nameB = b.querySelector(".element-name-main-view").textContent.toLowerCase();
+      if (nameA < nameB) {
+        return -1;
+      }
+      if (nameA > nameB) {
+        return 1;
+      }
+      return 0;
+    });
+
+    // Clear the search results container
+    searchResultsContainer.innerHTML = "";
+
+    // Append the sorted search result items back to the container
+    searchResultItems.forEach((item) => {
+      searchResultsContainer.appendChild(item);
+    });
+  }
+
+  // Function to sort elements numerically
+  function sortElementsNumerically() {
+    const searchResultsContainer = document.querySelector(".search-results-container");
+    const searchResultItems = Array.from(searchResultsContainer.querySelectorAll(".search-result-item"));
+
+    searchResultItems.sort((a, b) => {
+      const numberA = Number(a.querySelector(".element-number-main-view").textContent);
+      const numberB = Number(b.querySelector(".element-number-main-view").textContent);
+      return numberA - numberB;
+    });
+
+    // Clear the search results container
+    searchResultsContainer.innerHTML = "";
+
+    // Append the sorted search result items back to the container
+    searchResultItems.forEach((item) => {
+      searchResultsContainer.appendChild(item);
+    });
+  }
+}
 
 // Function to perform live search based on input value
 function liveSearch(atomicNumberInput, elementInput, elementSymbolInput) {
