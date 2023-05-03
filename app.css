@@ -261,6 +261,7 @@ button {
 #detail-view {
   width: 1500px;
   margin-top: 388px;
+  background-image: url(images/06.png);
 }
 
 #detail-view::backdrop{
@@ -294,6 +295,7 @@ button {
   height: 223.5px;
   border: 2px solid #000;
   margin: 2px 2px 2px 2px;
+  background-color: #488d57;
 }
 
 #content-grid {
