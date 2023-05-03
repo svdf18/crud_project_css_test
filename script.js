@@ -38,9 +38,10 @@ async function getElementData() {
 async function getMyElementData(){
   const response = await fetch(`${endpoint}/myElements.json`);
   const data = await response.json();
-  const myElements = prepareElementData(data);
-  return myElements
+  const myElements = prepareMyElementData(data);
+  return myElements;
 }
+
 
 // Prepare the element data by adding an ID for each element
 function prepareElementData(dataObject) {
@@ -52,6 +53,15 @@ function prepareElementData(dataObject) {
   }
 
   return elementDataArray;
+}
+
+function prepareMyElementData(dataObject) {
+  const myElementDataArray = [];
+  for (const key in dataObject) {
+    const myElement = dataObject[key];
+    myElementDataArray.push(myElement);
+  }
+  return myElementDataArray;
 }
 
 
@@ -220,9 +230,6 @@ function closeDetailView() {
 
 // 
 
-
-
-
 //
 
 
@@ -331,11 +338,18 @@ function closeDialog() {
 }
 
 
-// Function to create a sidebar with input fields and search button
 function createSidebar() {
   // Create sidebar container
   const sidebar = document.createElement("div");
   sidebar.classList.add("sidebar");
+
+  // Create input fields container
+  const inputFieldsContainer = document.createElement("div");
+  inputFieldsContainer.classList.add("input-fields-container");
+
+  // Create search results container
+  const searchResultsContainer = document.createElement("div");
+  searchResultsContainer.classList.add("search-results-container");
 
   // Create input fields
   const atomicNumberInput = createInputElement("text", "atomic-number", "Atomic Number");
@@ -345,21 +359,27 @@ function createSidebar() {
   // Create search button
   const searchButton = createButtonElement("search-button", "Search");
 
-  // Add input fields and search button to sidebar container
-  sidebar.appendChild(atomicNumberInput);
-  sidebar.appendChild(elementInput);
-  sidebar.appendChild(elementSymbolInput);
-  sidebar.appendChild(searchButton);
+  // Add input fields and search button to input fields container
+  inputFieldsContainer.appendChild(atomicNumberInput);
+  inputFieldsContainer.appendChild(elementInput);
+  inputFieldsContainer.appendChild(elementSymbolInput);
+  inputFieldsContainer.appendChild(searchButton);
+
+  // Add input fields container and search results container to sidebar container
+  sidebar.appendChild(inputFieldsContainer);
+  sidebar.appendChild(searchResultsContainer);
 
   // Add live search functionality
-atomicNumberInput.addEventListener("input", () => liveSearch(atomicNumberInput, elementInput, elementSymbolInput));
-elementInput.addEventListener("input", () => liveSearch(atomicNumberInput, elementInput, elementSymbolInput));
-elementSymbolInput.addEventListener("input", () => liveSearch(atomicNumberInput, elementInput, elementSymbolInput));
+  atomicNumberInput.addEventListener("input", () => liveSearch(atomicNumberInput, elementInput, elementSymbolInput));
+  elementInput.addEventListener("input", () => liveSearch(atomicNumberInput, elementInput, elementSymbolInput));
+  elementSymbolInput.addEventListener("input", () => liveSearch(atomicNumberInput, elementInput, elementSymbolInput));
 
   // Create toggle button to show/hide sidebar
   const toggleButton = document.createElement("button");
   toggleButton.classList.add("toggle-button");
   const arrow = document.createElement("span");
+ 
+
   arrow.classList.add("arrow");
   toggleButton.appendChild(arrow);
   sidebar.appendChild(toggleButton);
@@ -382,32 +402,74 @@ function liveSearch(atomicNumberInput, elementInput, elementSymbolInput) {
   const elementValue = elementInput.value.trim().toLowerCase();
   const elementSymbolValue = elementSymbolInput.value.trim();
 
+  const searchResultsContainer = document.querySelector(".search-results-container");
+  searchResultsContainer.innerHTML = ""; // Clear previous search results
+
+  // Check if all input fields are empty
   if (atomicNumberValue === "" && elementValue === "" && elementSymbolValue === "") {
     // If all input fields are empty, reset the display of all empty elements
     resetEmptyElementsDisplay();
-  } else {
-    // Get all empty elements in the periodic table
-    const periodicTable = document.querySelector(".periodic-table");
-    const emptyElements = periodicTable.querySelectorAll(".empty-element");
-
-    // Loop through empty elements and hide/show them based on input values
-    emptyElements.forEach((emptyElement) => {
-      const elementName = emptyElement.querySelector(".element-name-main-view").textContent;
-      const elementNumber = emptyElement.querySelector(".element-number-main-view").textContent;
-      const elementSymbol = emptyElement.querySelector(".element-symbol-main-view").textContent;
-
-      if (
-        (elementValue === "" || elementName.toLowerCase().includes(elementValue)) &&
-        (atomicNumberValue === "" || elementNumber.includes(atomicNumberValue)) &&
-        (elementSymbolValue === "" || elementSymbol.toLowerCase().includes(elementSymbolValue.toLowerCase()))
-      ) {
-        emptyElement.style.display = "flex";
-      } else {
-        emptyElement.style.display = "none";
-      }
-    });
+    return;
   }
+
+  // Get all empty elements in the periodic table
+  const periodicTable = document.querySelector(".periodic-table");
+  const emptyElements = periodicTable.querySelectorAll(".empty-element");
+
+  let resultCount = 0;
+
+  // Loop through empty elements and hide/show them based on input values
+  emptyElements.forEach((emptyElement) => {
+    const elementName = emptyElement.querySelector(".element-name-main-view").textContent;
+    const elementNumber = emptyElement.querySelector(".element-number-main-view").textContent;
+    const elementSymbol = emptyElement.querySelector(".element-symbol-main-view").textContent;
+
+    if (
+      (elementValue === "" || elementName.toLowerCase().includes(elementValue)) &&
+      (atomicNumberValue === "" || elementNumber.includes(atomicNumberValue)) &&
+      (elementSymbolValue === "" || elementSymbol.toLowerCase().includes(elementSymbolValue.toLowerCase()))
+    ) {
+      emptyElement.style.display = "flex";
+
+      // If we have reached the maximum number of results, stop adding search result items
+      if (resultCount >= 10) {
+        return;
+      }
+
+      // Clone the emptyElement and append it to the search results container
+      const searchResultItem = emptyElement.cloneNode(true);
+      searchResultItem.classList.add("search-result-item");
+      searchResultsContainer.appendChild(searchResultItem);
+
+      // Add click event listener to the search result item
+      searchResultItem.addEventListener("click", () => {
+        // Show detail view for the clicked search result item
+        showDetailView(emptyElement);
+      });
+
+      // Increment the result count
+      resultCount++;
+
+    } else {
+      emptyElement.style.display = "none";
+    }
+  });
 }
+
+  // Append the resultsGrid to the searchResultsContainer
+  searchResultsContainer.appendChild(resultsGrid);
+
+
+// Function to reset the display of all empty elements
+function resetEmptyElementsDisplay() {
+  const periodicTable = document.querySelector(".periodic-table");
+  const emptyElements = periodicTable.querySelectorAll(".empty-element");
+  
+  emptyElements.forEach((emptyElement) => {
+    emptyElement.style.display = "flex";
+  });
+}
+
 
 
 // Function to reset the display of all empty elements
@@ -505,3 +567,4 @@ descriptionButton.addEventListener("click", () => {
   // Add the description element to the detail view display section
   detailViewDisplay.appendChild(description);
 });
+

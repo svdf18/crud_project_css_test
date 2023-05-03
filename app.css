@@ -72,11 +72,12 @@ body {
   max-width: 1500px;
   width: 100%;
   padding: 1% 1%; /* Adjust the top and bottom padding as needed */
-  margin: 0px 0px 200px auto;
+  margin: 0 auto; /* Change margin to remove large gap */
   display: flex;
   justify-content: center;
   align-items: center;
 }
+
 
 .empty-element[data-group][data-period] {
   grid-column: attr(data-group);
@@ -119,7 +120,7 @@ button:hover {
 
 
 input {
-  margin: 1em auto;
+  margin: 0.5em auto; /* reduce margin */
   width: 100%;
   max-width: 350px;
   padding: 1em;
@@ -127,8 +128,9 @@ input {
   border: none;
   border-bottom: 2px solid #2f3191;
   background: var(--white);
-  color: var(--blue)
+  color: var(--blue);
 }
+
 
 .element-number {
   font-size: 5em;
@@ -141,10 +143,10 @@ input {
   position: fixed;
   top: 0;
   right: 0;
-  width: 300px;
-  height: 100%;
+  width: 200px;
+  height: 80%;
   background-color: #f0f0f0;
-  padding: 20px;
+  padding: 12px;
   display: flex;
   flex-direction: column;
   gap: 20px;
@@ -152,18 +154,19 @@ input {
   transition: transform 0.3s ease;
 }
 
+
 .sidebar.show {
   transform: translateX(0);
 }
 
 .toggle-button {
   position: absolute;
-  top: 20px;
+  top: 1px;
   left: -50px;
   width: 50px;
   height: 50px;
   background-color: #f0f0f0;
-  border: 1px solid #000;
+  border: 2px solid #000;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -306,4 +309,11 @@ button {
 
 #detail-view-element {
   border: 2px solid #000;
+}
+
+.search-results-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: space-evenly;
 }
