@@ -1,4 +1,4 @@
-import {createSidebar, performSearch} from "./helpers.js";
+import {createSidebar, performSearch, createFilterBoxes} from "./helpers.js";
 
 // Define the Firebase database endpoint
 const endpoint = "https://periodic-table-json-default-rtdb.europe-west1.firebasedatabase.app/";
@@ -22,6 +22,10 @@ async function initApp() {
 
   // Create the sidebar
   createSidebar();
+
+  // Create filter boxes
+  createFilterBoxes();
+
 }
 
 // Asynchronously retrieve the element data from the Firebase database

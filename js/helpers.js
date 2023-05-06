@@ -263,3 +263,94 @@ export function performSearch() {
     }
   });
 }
+export function createFilterBoxes() {
+  const filterContainer = document.createElement("div");
+  filterContainer.classList.add("filter-container");
+
+  const categories = [
+    { name: "Lanthanide", className: "lanthanide" },
+    { name: "Actinide", className: "actinide" },
+    { name: "Diatomic Nonmetal", className: "diatomic-nonmetal" },
+    { name: "Noble Gas", className: "noble-gas" },
+    { name: "Alkaline Earth Metal", className: "alkaline-earth-metal" },
+    { name: "Metalloid", className: "metalloid" },
+    { name: "Polyatomic Nonmetal", className: "polyatomic-nonmetal" },
+    { name: "Alkali Metal", className: "alkali-metal" },
+    { name: "Post-Transition Metal", className: "post-transition-metal" },
+    { name: "Unknown", className: "unknown" },
+    { name: "Probably Transition Metal", className: "probably-transition-metal" },
+    { name: "Transition Metal", className: "transition-metal" },
+  ];
+
+  let checkedCategories = [];
+
+  for (const category of categories) {
+    const filterLabel = document.createElement("label");
+    filterLabel.textContent = category.name;
+    filterLabel.classList.add("filter-item");
+
+    const filterCheckbox = document.createElement("input");
+    filterCheckbox.type = "checkbox";
+    filterCheckbox.classList.add("filter-checkbox");
+    filterCheckbox.dataset.categoryClass = category.className;
+
+    filterLabel.appendChild(filterCheckbox);
+    filterContainer.appendChild(filterLabel);
+
+    filterCheckbox.addEventListener("change", (event) => {
+      const categoryClass = event.target.dataset.categoryClass;
+
+      if (event.target.checked) {
+        checkedCategories.push(categoryClass);
+
+        for (const element of document.querySelectorAll(`.${categoryClass}`)) {
+          element.style.display = "grid";
+        }
+
+        for (const uncheckedCategory of categories.filter(c => !checkedCategories.includes(c.className))) {
+          for (const element of document.querySelectorAll(`.${uncheckedCategory.className}`)) {
+            element.style.display = "none";
+          }
+        }
+      } else {
+        checkedCategories = checkedCategories.filter(c => c !== categoryClass);
+
+        if (checkedCategories.length === 0) {
+          for (const category of categories) {
+            for (const element of document.querySelectorAll(`.${category.className}`)) {
+              element.style.display = "grid";
+            }
+          }
+        } else {
+          for (const element of document.querySelectorAll(`.${categoryClass}`)) {
+            element.style.display = "none";
+          }
+        }
+      }
+    });
+  }
+
+  document.body.appendChild(filterContainer);
+}
+
+
+function toggleCategoryVisibility(checkbox) {
+  const categoryClass = checkbox.dataset.categoryClass;
+  const elements = document.querySelectorAll(`.${categoryClass}`);
+  const allElements = document.querySelectorAll(".element");
+
+  if (checkbox.checked) {
+    for (const element of allElements) {
+      if (!element.classList.contains(categoryClass)) {
+        element.style.display = "none";
+      }
+    }
+    for (const element of elements) {
+      element.style.display = "grid";
+    }
+  } else {
+    for (const element of allElements) {
+      element.style.display = "grid";
+    }
+  }
+}

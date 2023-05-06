@@ -20,18 +20,24 @@ body {
 }
 
 .container {
-  max-width: 1000px;
+  max-width: 100vw;
   width: 100%;
-  padding: 0 5%;
+  padding: 1% 1%;
+  margin: 0 auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .periodic-table {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
-  grid-template-rows: repeat(auto-fill, minmax(60px, 1fr));
-  grid-gap: 3px;
+  grid-template-columns: repeat(18, 1fr);
+  grid-auto-rows: minmax(3.5vw, 1fr);
+  grid-gap: 5px;
   width: 100%;
   font-size: calc(8px + 0.3vw);
+  justify-content: space-evenly;
+  margin-top: 100px; /* add this line to move the grid down */
 }
 
 .empty-element {
@@ -39,8 +45,8 @@ body {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  width: 60px;
-  height: 55px;
+  width: 80px;
+  height: 75px;
   background-color: var(--blue);
   border: 1.5px solid var(--blue);
   font-size: 10px;
@@ -155,6 +161,7 @@ input {
   gap: 20px;
   transform: translateX(100%);
   transition: transform 0.3s ease;
+   margin-top: 100px; /* add this line to move the grid down */
 }
 
 
@@ -256,11 +263,12 @@ button {
   background-color: #99ccff;
 }
 
+
 /* detail-view html test */
 
 #detail-view {
   width: 1500px;
-  margin-top: 388px;
+  margin-top: 390px;
   background-image: url(images/06.png);
 }
 
@@ -372,7 +380,34 @@ button.sort-numerically-button:hover {
   background-color: var(--blue);
   color: var(--white);
 }
+.filter-container {
+  z-index: 1;
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  grid-auto-flow: column;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background-color: #12a52684;
+  padding: 10px 0;
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+}
 
-.search-result-item-disabled {
-  opacity: 0.5; /* or any other CSS property that applies the desired greyed-out effect */
+
+.filter-item {
+  display: flex;
+  flex-direction: column; /* Stack items vertically */
+  align-items: center; /* Center items vertically */
+  font-size: 19px;
+  font-weight: bold;
+  color: rgb(250, 250, 255);
+  background-color: #11611d33;
+  padding: 10px 0;
+  margin: 0;
+  padding: 0;
+  gap: 5px;
 }
