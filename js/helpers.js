@@ -144,6 +144,17 @@ import { createInputElement, createButtonElement, showDetailView, showFormView }
       searchResultsContainer.appendChild(item);
     });
   }
+
+   // Add event listener to input fields to clear search results container when input fields are cleared
+  atomicNumberInput.addEventListener("input", checkClearSearchResults);
+  elementInput.addEventListener("input", checkClearSearchResults);
+  elementSymbolInput.addEventListener("input", checkClearSearchResults);
+
+  function checkClearSearchResults() {
+    if (atomicNumberInput.value === "" && elementInput.value === "" && elementSymbolInput.value === "") {
+      searchResultsContainer.innerHTML = "";
+    }
+  }
 }
 
 
