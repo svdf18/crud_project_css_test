@@ -415,4 +415,4 @@ descriptionButton.addEventListener("click", () => {
   detailViewDisplay.appendChild(description);
 });
 
-export {createButtonElement, createInputElement};
+export {createButtonElement, createInputElement, showDetailView, showFormView};

@@ -1,4 +1,4 @@
-import { createInputElement, createButtonElement } from "./script.js";
+import { createInputElement, createButtonElement, showDetailView, showFormView } from "./script.js";
 
  export function createSidebar() {
   // Create sidebar container
@@ -19,7 +19,7 @@ import { createInputElement, createButtonElement } from "./script.js";
   const elementSymbolInput = createInputElement("text", "element-symbol", "Element Symbol");
 
   // Create search button
-  const searchButton = createButtonElement("search-button", "Search");
+  const searchButton = createButtonElement("search-button", "");
 
   // Create sort dropdown container
   const sortDropdownContainer = document.createElement("div");
@@ -147,7 +147,6 @@ import { createInputElement, createButtonElement } from "./script.js";
 }
 
 
-// Function to perform live search based on input value
 export function liveSearch(atomicNumberInput, elementInput, elementSymbolInput) {
   const atomicNumberValue = atomicNumberInput.value.trim();
   const elementValue = elementInput.value.trim().toLowerCase();
@@ -155,13 +154,6 @@ export function liveSearch(atomicNumberInput, elementInput, elementSymbolInput) 
 
   const searchResultsContainer = document.querySelector(".search-results-container");
   searchResultsContainer.innerHTML = ""; // Clear previous search results
-
-  // Check if all input fields are empty
-  if (atomicNumberValue === "" && elementValue === "" && elementSymbolValue === "") {
-    // If all input fields are empty, reset the display of all empty elements
-    resetEmptyElementsDisplay();
-    return;
-  }
 
   // Get all empty elements in the periodic table
   const periodicTable = document.querySelector(".periodic-table");
@@ -175,11 +167,17 @@ export function liveSearch(atomicNumberInput, elementInput, elementSymbolInput) 
     const elementNumber = emptyElement.querySelector(".element-number-main-view").textContent;
     const elementSymbol = emptyElement.querySelector(".element-symbol-main-view").textContent;
 
-    if (
+    const matchFound =
       (elementValue === "" || elementName.toLowerCase().includes(elementValue)) &&
       (atomicNumberValue === "" || elementNumber.includes(atomicNumberValue)) &&
-      (elementSymbolValue === "" || elementSymbol.toLowerCase().includes(elementSymbolValue.toLowerCase()))
-    ) {
+      (elementSymbolValue === "" || elementSymbol.toLowerCase().includes(elementSymbolValue.toLowerCase()));
+
+    if (matchFound) {
+      // If we have reached the maximum number of results, stop adding search result items
+      if (resultCount >= 10) {
+        return;
+      }
+
       // Clone the emptyElement and append it to the search results container
       const searchResultItem = emptyElement.cloneNode(true);
       searchResultItem.classList.add("search-result-item");
@@ -193,17 +191,27 @@ export function liveSearch(atomicNumberInput, elementInput, elementSymbolInput) 
 
       // Increment the result count
       resultCount++;
+    }
 
-      // If we have reached the maximum number of results, stop adding search result items
-      if (resultCount >= 10) {
-        return;
-      }
+    // Set opacity based on whether a match is found and if any search input is provided
+    if (atomicNumberValue === "" && elementValue === "" && elementSymbolValue === "") {
+      resetEmptyElementsOpacity();
     } else {
-      // Add the search-result-item-disabled class to non-matching search results
-      emptyElement.classList.add("search-result-item-disabled");
+      emptyElement.style.opacity = matchFound ? "1" : "0.3";
     }
   });
 }
+
+export function resetEmptyElementsOpacity() {
+  const periodicTable = document.querySelector(".periodic-table");
+  const emptyElements = periodicTable.querySelectorAll(".empty-element");
+  emptyElements.forEach((emptyElement) => {
+    emptyElement.style.opacity = "1";
+  });
+}
+
+
+
 
 
 // Function to reset the display of all empty elements
@@ -212,9 +220,9 @@ export function resetEmptyElementsDisplay() {
   const emptyElements = periodicTable.querySelectorAll(".empty-element");
   emptyElements.forEach((emptyElement) => {
     emptyElement.style.display = "flex";
+    emptyElement.classList.remove("search-result-item-disabled");
   });
 }
-
 
 // Function to perform search on atomic number, element name or element symbol
 export function performSearch() {
