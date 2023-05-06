@@ -169,7 +169,7 @@ export function liveSearch(atomicNumberInput, elementInput, elementSymbolInput) 
 
   let resultCount = 0;
 
-  // Loop through empty elements and hide/show them based on input values
+  // Loop through empty elements and add matching ones to search results container
   emptyElements.forEach((emptyElement) => {
     const elementName = emptyElement.querySelector(".element-name-main-view").textContent;
     const elementNumber = emptyElement.querySelector(".element-number-main-view").textContent;
@@ -180,13 +180,6 @@ export function liveSearch(atomicNumberInput, elementInput, elementSymbolInput) 
       (atomicNumberValue === "" || elementNumber.includes(atomicNumberValue)) &&
       (elementSymbolValue === "" || elementSymbol.toLowerCase().includes(elementSymbolValue.toLowerCase()))
     ) {
-      emptyElement.style.display = "flex";
-
-      // If we have reached the maximum number of results, stop adding search result items
-      if (resultCount >= 10) {
-        return;
-      }
-
       // Clone the emptyElement and append it to the search results container
       const searchResultItem = emptyElement.cloneNode(true);
       searchResultItem.classList.add("search-result-item");
@@ -201,11 +194,17 @@ export function liveSearch(atomicNumberInput, elementInput, elementSymbolInput) 
       // Increment the result count
       resultCount++;
 
+      // If we have reached the maximum number of results, stop adding search result items
+      if (resultCount >= 10) {
+        return;
+      }
     } else {
-      emptyElement.style.display = "none";
+      // Add the search-result-item-disabled class to non-matching search results
+      emptyElement.classList.add("search-result-item-disabled");
     }
   });
 }
+
 
 // Function to reset the display of all empty elements
 export function resetEmptyElementsDisplay() {

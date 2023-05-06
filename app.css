@@ -372,3 +372,7 @@ button.sort-numerically-button:hover {
   background-color: var(--blue);
   color: var(--white);
 }
+
+.search-result-item-disabled {
+  opacity: 0.5; /* or any other CSS property that applies the desired greyed-out effect */
+}
