@@ -411,3 +411,9 @@ button.sort-numerically-button:hover {
   padding: 0;
   gap: 5px;
 }
+
+
+.note-container {
+  height: 200px;
+  overflow: auto;
+}

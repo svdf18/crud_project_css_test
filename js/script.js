@@ -176,44 +176,145 @@ function showDetailView(element) {
     `;
   }
 
+
 // display note function
-  function displayNotes(element) {
+function displayNotes(element) {
+  const detailViewDisplay = document.getElementById("detail-view-display");
+  detailViewDisplay.innerHTML = `
+    <form id="note-form">
+      <input type="text" id="body">
+      <button type="submit" id="save-button">Save</button>
+    </form>
+  `;
+
+  const noteForm = document.getElementById("note-form");
+  noteForm.addEventListener("submit", saveNoteClicked);
+
+  const inputField = document.getElementById("body");
+  inputField.focus();
+}
+
+
+
+async function createNote (body) {
+  const updateMyNote = { notes: body };
+  const json = JSON.stringify(updateMyNote);
+  const noteResponse = await fetch(`${endpoint}/myElements/${element.number-1}.json`, {
+    method: "PUT",
+    body: json
+  });
+
+  if (noteResponse.ok) {
+    console.log("note created");
+    
     const detailViewDisplay = document.getElementById("detail-view-display");
-    document.querySelector("body").addEventListener("submit", saveNoteClicked)
-    detailViewDisplay.innerHTML = "";
-    detailViewDisplay.innerHTML = `
-      <form>
-        <input type="text" id="body">
-        <button type="submit" id="save-button">Save</button>
-      </form>
+    
+    // If there is text present, display the text with an update button
+    if (body !== "") {
+      detailViewDisplay.innerHTML = `
+        <div class="note-container">
+          <b id="note-text">${body}</b>
+        </div>
+        <button id="update-button">Update</button>
+        <button id="delete-button">Delete</button>
       `;
-      console.log("note display")
-  }
+      
+      const updateButton = document.getElementById("update-button");
+      const deleteButton = document.getElementById("delete-button");
   
-  function saveNoteClicked(event) {
-    event.preventDefault();
-    const form = event.target;
-    const body = form.body.value
-
-    createNote(body);
-    console.log("whhatt?!?")
+      updateButton.addEventListener("click", updateNoteClicked);
+      deleteButton.addEventListener("click", deleteNoteClicked);
+    }
+    
+    // If there is no text, display an input field with a save button
+    else {
+      detailViewDisplay.innerHTML = `
+        <form>
+          <input type="text" id="body">
+          <button type="submit" id="save-button">Save</button>
+        </form>
+      `;
+      
+      inputField = document.getElementById("body");
+      inputField.focus();
+      const saveButton = document.getElementById("save-button");
+      saveButton.addEventListener("click", saveNoteClicked);
+    }
+    
+    // Add event listeners for update and delete buttons
+    const updateButton = document.getElementById("update-button");
+    const deleteButton = document.getElementById("delete-button");
+    
+    if (updateButton) {
+      updateButton.addEventListener("click", updateNoteClicked);
+    }
+    if (deleteButton) {
+      deleteButton.addEventListener("click", deleteNoteClicked);
+    }
   }
+}
 
-  async function createNote(body) {
-    console.log(element.number-1);
-    const updateMyNote = { notes: body };
+
+function saveNoteClicked(event) {
+  event.preventDefault();
+  const form = event.target.parentElement;
+  const body = form.querySelector("#body").value;
+  createNote(body);
+  console.log("save button clicked");
+}
+
+function updateNoteClicked() {
+  const noteContainer = document.querySelector(".note-container");
+  const noteText = document.querySelector("#note-text");
+  const body = noteText.innerText;
+
+  const inputField = document.createElement("input");
+  inputField.type = "text";
+  inputField.value = body;
+  noteContainer.replaceChild(inputField, noteText);
+  
+  const saveButton = document.createElement("button");
+  saveButton.textContent = "Save";
+  noteContainer.appendChild(saveButton);
+
+  saveButton.addEventListener("click", async () => {
+    const updatedBody = inputField.value;
+    const updateMyNote = { notes: updatedBody };
     const json = JSON.stringify(updateMyNote);
     const noteResponse = await fetch(`${endpoint}/myElements/${element.number-1}.json`, {
       method: "PUT",
       body: json
     });
-  
-    if (noteResponse.ok) {
-      console.log("note created");
-      displayNotes();
-    }
-  }
 
+    if (noteResponse.ok) {
+      console.log("note updated");
+      displayNotes(element);
+    }
+  });
+
+  const updateButton = document.getElementById("update-button");
+  const deleteButton = document.getElementById("delete-button");
+
+  updateButton.style.display = "none";
+  deleteButton.style.display = "none";
+}
+
+
+function deleteNoteClicked() {
+  deleteNote(element);
+  console.log("delete button clicked");
+}
+
+async function deleteNote(element) {
+  const noteResponse = await fetch(`${endpoint}/myElements/${element.number-1}.json`, {
+    method: "DELETE"
+  });
+
+  if (noteResponse.ok) {
+    console.log("note deleted");
+    displayNotes(element);
+  }
+}
 
   closeDetailView();
 }
